@@ -6,42 +6,43 @@ function getLocation() {
     const locationInfo = document.getElementById('locationInfo');
     const weatherInfo = document.getElementById('weatherInfo');
     const timeElement = document.getElementById('time');
-    let ipUrl = 'https://ip-api.com/json/';
+    let ipUrl = 'https://ipinfo.io/json/';
 
     if (ipInput) {
         if (!validateIP(ipInput)) {
             alert('Enter the correct IP address.');
             return;
         }
-        ipUrl += ipInput;
+        ipUrl += "https://ipinfo.io/${ipInput}/json";
     }
 
     fetch(ipUrl)
         .then(response => response.json())
         .then(data => {
-            if (data.status === 'fail') {
+            if (!data.city || !data.region || !data.country) {
                 alert('Location could not be determined.');
                 return;
             }
             locationInfo.innerHTML = `<h2>Location</h2>
                                       <p>City: ${data.city}</p>
-                                      <p>Region: ${data.regionName}</p>
+                                      <p>Region: ${data.region}</p>
                                       <p>A country: ${data.country}</p>
-                                      <p>IP: ${data.query}</p>`;
+                                      <p>IP: ${data.ip}</p>`;
             timezone = data.timezone;
             startClock(timezone);
             setBackgroundByCity(data.city);
             return data;
         })
         .then(data => {
-            if (data) {
-                fetchWeather(data.lat, data.lon);
+            if (data && data.loc) {
+                const [lat, lon] = data.loc.split(',');
+                fetchWeather(lat, lon);
                 clearInterval(weatherInterval);
-                weatherInterval = setInterval(() => fetchWeather(data.lat, data.lon), 15000);
+                weatherInterval = setInterval(() => fetchWeather(lat, lon), 15000);
             }
         })
         .catch(error => {
-            console.error('Ошибка:', error);
+            console.error('error:', error);
             weatherInfo.innerHTML = `<p style="color: red;">Error when receiving weather data: ${error.message}</p>`;
         });
 }
