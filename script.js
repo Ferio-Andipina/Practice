@@ -17,9 +17,6 @@ function getLocation() {
         ipUrl += `&ip=${ipInput}`;
     }
 
-//    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-//    const fetchUrl = proxyUrl + ipUrl;
-
     fetch(ipUrl)
         .then(response => response.json())
         .then(data => {
@@ -84,7 +81,7 @@ function fetchWeather(lat, lon) {
         .then(weatherData => {
             if (weatherData && weatherData.current_weather) {
                 weatherInfo.innerHTML = `<h2>Weather</h2>
-                                         <p>Temperature: ${weatherData.current_weather.temperature} °C</p>
+                                         <p>Temperature: ${weatherData.current_weather.temperature} &deg;C</p>
                                          <p>Wind speed: ${weatherData.current_weather.windspeed} m/s</p>`;
             } else {
                 throw new Error('Weather data not available');
