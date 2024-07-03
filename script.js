@@ -6,27 +6,28 @@ function getLocation() {
     const locationInfo = document.getElementById('locationInfo');
     const weatherInfo = document.getElementById('weatherInfo');
     const timeElement = document.getElementById('time');
-    let ipUrl = 'https://ipinfo.io/json';
+    const apiKey = '9c0f4c5332eb4bce9db0e6de8cad930d';
+    let ipUrl = 'https://api.ipgeolocation.io/ipgeo?apiKey=${apiKey}';
 
     if (ipInput) {
         if (!validateIP(ipInput)) {
             alert('Enter the correct IP address.');
             return;
         }
-        ipUrl = `https://ipinfo.io/${ipInput}/json`;
+        ipUrl += `&ip=${ipInput}`;
     }
 
     fetch(ipUrl)
         .then(response => response.json())
         .then(data => {
-            if (!data.city || !data.region || !data.country) {
+            if (!data.city || !data.state_prov || !data.country_name) {
                 alert('Location could not be determined.');
                 return;
             }
             locationInfo.innerHTML = `<h2>Location</h2>
                                       <p>City: ${data.city}</p>
-                                      <p>Region: ${data.region}</p>
-                                      <p>A country: ${data.country}</p>
+                                      <p>Region: ${data.state_prov}</p>
+                                      <p>A country: ${data.country_name}</p>
                                       <p>IP: ${data.ip}</p>`;
             timezone = data.timezone;
             startClock(timezone);
@@ -35,7 +36,8 @@ function getLocation() {
         })
         .then(data => {
             if (data && data.loc) {
-                const [lat, lon] = data.loc.split(',');
+                const lat = data.latitude;
+                const lon = data.longitude;
                 fetchWeather(lat, lon);
                 clearInterval(weatherInterval);
                 weatherInterval = setInterval(() => fetchWeather(lat, lon), 15000);
