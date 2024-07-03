@@ -7,7 +7,7 @@ function getLocation() {
     const weatherInfo = document.getElementById('weatherInfo');
     const timeElement = document.getElementById('time');
     const apiKey = '9c0f4c5332eb4bce9db0e6de8cad930d';
-    let ipUrl = 'https://api.ipgeolocation.io/ipgeo?apiKey=' + apiKey;
+    let ipUrl = `https://api.ipgeolocation.io/ipgeo?apiKey=${apiKey}`;
 
     if (ipInput) {
         if (!validateIP(ipInput)) {
@@ -17,10 +17,10 @@ function getLocation() {
         ipUrl += `&ip=${ipInput}`;
     }
 
-    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-    const fetchUrl = proxyUrl + ipUrl;
+//    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+//    const fetchUrl = proxyUrl + ipUrl;
 
-    fetch(fetchUrl)
+    fetch(ipUrl)
         .then(response => response.json())
         .then(data => {
             if (!data.city || !data.state_prov || !data.country_name) {
@@ -32,18 +32,16 @@ function getLocation() {
                                       <p>Region: ${data.state_prov}</p>
                                       <p>A country: ${data.country_name}</p>
                                       <p>IP: ${data.ip}</p>`;
-            timezone = data.timezone;
+            timezone = data.time_zone.name;
             startClock(timezone);
             setBackgroundByCity(data.city);
             return data;
         })
         .then(data => {
-            if (data && data.loc) {
-                const lat = data.latitude;
-                const lon = data.longitude;
-                fetchWeather(lat, lon);
+            if (data) {
+                fetchWeather(data.latitude, data.longitude);
                 clearInterval(weatherInterval);
-                weatherInterval = setInterval(() => fetchWeather(lat, lon), 15000);
+                weatherInterval = setInterval(() => fetchWeather(data.latitude, data.longitude), 15000);
             }
         })
         .catch(error => {
