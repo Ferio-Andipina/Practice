@@ -13,7 +13,7 @@ function getLocation() {
             alert('Enter the correct IP address.');
             return;
         }
-        ipUrl += "https://ipinfo.io/${ipInput}/json";
+        ipUrl = `https://ipinfo.io/${ipInput}/json`;
     }
 
     fetch(ipUrl)
