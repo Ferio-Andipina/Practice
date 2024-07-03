@@ -6,7 +6,7 @@ function getLocation() {
     const locationInfo = document.getElementById('locationInfo');
     const weatherInfo = document.getElementById('weatherInfo');
     const timeElement = document.getElementById('time');
-    let ipUrl = 'http://ip-api.com/json/';
+    let ipUrl = 'https://ip-api.com/json/';
 
     if (ipInput) {
         if (!validateIP(ipInput)) {
