@@ -7,7 +7,7 @@ function getLocation() {
     const weatherInfo = document.getElementById('weatherInfo');
     const timeElement = document.getElementById('time');
     const apiKey = '9c0f4c5332eb4bce9db0e6de8cad930d';
-    let ipUrl = 'https://api.ipgeolocation.io/ipgeo?apiKey=${apiKey}';
+    let ipUrl = 'https://api.ipgeolocation.io/ipgeo?apiKey=' + apiKey;
 
     if (ipInput) {
         if (!validateIP(ipInput)) {
