@@ -17,7 +17,10 @@ function getLocation() {
         ipUrl += `&ip=${ipInput}`;
     }
 
-    fetch(ipUrl)
+    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+    const fetchUrl = proxyUrl + ipUrl;
+
+    fetch(fetchUrl)
         .then(response => response.json())
         .then(data => {
             if (!data.city || !data.state_prov || !data.country_name) {
